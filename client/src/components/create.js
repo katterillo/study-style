@@ -42,10 +42,10 @@ export default function Create() {
   // This following section will display the form that takes the input from the user.
   return (
     <div>
-      <h3>Create New Record</h3>
+      <h3>Create New Study Profile</h3>
       <form onSubmit={onSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">Username</label>
           <input
             type="text"
             className="form-control"
@@ -54,8 +54,9 @@ export default function Create() {
             onChange={(e) => updateForm({ name: e.target.value })}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="position">Position</label>
+       
+           <div className="form-group">
+          <label htmlFor="position">Password</label>
           <input
             type="text"
             className="form-control"
