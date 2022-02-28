@@ -46,6 +46,7 @@ export default function Home(){
             </Typography>
           </CardContent>
         </Card>
+        
     )
 }
 
