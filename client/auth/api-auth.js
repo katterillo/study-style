@@ -1,4 +1,4 @@
-const signin = async (user) => {
+const signin = async (userprofile) => {
   try {
     let response = await fetch('/auth/signin/', {
       method: 'POST',
@@ -7,7 +7,7 @@ const signin = async (user) => {
         'Content-Type': 'application/json'
       },
       credentials: 'include',
-      body: JSON.stringify(user)
+      body: JSON.stringify(userprofile)
     })
     return await response.json()
   } catch(err) {

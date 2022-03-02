@@ -10,6 +10,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import auth from './../auth/auth-helper'
 import {read, update} from './api-user.js'
 import {Redirect} from 'react-router-dom'
+import Box from '@material-ui/core/Box';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -43,6 +48,7 @@ export default function EditProfile({ match }) {
     name: '',
     password: '',
     email: '',
+    studytime: '',
     open: false,
     error: '',
     redirectToProfile: false
@@ -59,7 +65,7 @@ export default function EditProfile({ match }) {
       if (data && data.error) {
         setValues({...values, error: data.error})
       } else {
-        setValues({...values, name: data.name, email: data.email})
+        setValues({...values, name: data.name, email: data.email, studytime: data.studytime})
       }
     })
     return function cleanup(){
@@ -72,7 +78,8 @@ export default function EditProfile({ match }) {
     const user = {
       name: values.name || undefined,
       email: values.email || undefined,
-      password: values.password || undefined
+      password: values.password || undefined,
+      studytime: values.studytime || undefined
     }
     update({
       userId: match.params.userId
@@ -87,11 +94,13 @@ export default function EditProfile({ match }) {
     })
   }
   const handleChange = name => event => {
+    console.log(event);
     setValues({...values, [name]: event.target.value})
+    console.log(event);
   }
 
     if (values.redirectToProfile) {
-      return (<Redirect to={'/user/' + values.userId}/>)
+      return (<Redirect to={'/userprofile/' + values.userId}/>)
     }
     return (
       <Card className={classes.card}>
@@ -102,6 +111,23 @@ export default function EditProfile({ match }) {
           <TextField id="name" label="Name" className={classes.textField} value={values.name} onChange={handleChange('name')} margin="normal"/><br/>
           <TextField id="email" type="email" label="Email" className={classes.textField} value={values.email} onChange={handleChange('email')} margin="normal"/><br/>
           <TextField id="password" type="password" label="Password" className={classes.textField} value={values.password} onChange={handleChange('password')} margin="normal"/>
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Age</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={values.studytime}
+                label="StudyTime"
+                onChange={handleChange('studytime')}
+        >
+          <MenuItem value={"Morning"}>Morning</MenuItem>
+          <MenuItem value={"Afternoon"}>Afternoon</MenuItem>
+          <MenuItem value={"Evening"}>Evening</MenuItem>
+          <MenuItem value={"N/A"}>Thirty</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
           <br/> {
             values.error && (<Typography component="p" color="error">
               <Icon color="error" className={classes.error}>error</Icon>
