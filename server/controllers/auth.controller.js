@@ -1,4 +1,4 @@
-import User from '../models/user.model'
+import User from '../models/userprofile.model'
 import jwt from 'jsonwebtoken'
 import expressJwt from 'express-jwt'
 import config from './../../config/config'
@@ -28,7 +28,7 @@ const signin = (req, res) => {
   
       return res.json({
         token,
-        user: {_id: user._id, name: user.name, email: user.email}
+        user: {_id: user._id, name: user.name, email: user.email, genre: user.genre, studytime: user.studytime, goal: user.goal}
       })
     })
   }

@@ -74,9 +74,9 @@ export default function Profile({ match }) {
             <ListItemText primary={user.name} secondary={user.email}/> {
              auth.isAuthenticated().user && auth.isAuthenticated().user._id == user._id &&
               (<ListItemSecondaryAction>
-                <Link to={"/user/edit/" + user._id}>
+                <Link to={"/userprofile/edit/" + user._id}>
                   <IconButton aria-label="Edit" color="primary">
-                    <Edit/>
+                    <Edit/> Edit Study Profile
                   </IconButton>
                 </Link>
                 <DeleteUser userId={user._id}/>
@@ -85,9 +85,11 @@ export default function Profile({ match }) {
           </ListItem>
           <Divider/>
           <ListItem>
-            <ListItemText primary={"Joined: " + (
-              new Date(user.created)).toDateString()}/>
+            <ListItemText primary={"Goal: " +user.goal} />
+            <ListItemText primary={"Preferred genre: " +user.genre} />
+            <ListItemText primary={"Preferred time to study: " +user.studytime} />
           </ListItem>
+          
         </List>
       </Paper>
     )
