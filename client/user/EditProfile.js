@@ -98,9 +98,9 @@ export default function EditProfile({ match }) {
     })
   }
   const handleChange = name => event => {
-    console.log(event);
+    console.log(event.target.value);
+    console.log("Here");
     setValues({...values, [name]: event.target.value})
-    console.log(event);
   }
 
     if (values.redirectToProfile) {
