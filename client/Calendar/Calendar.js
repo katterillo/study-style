@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Box, TextField, Button, FormControlLabel, Checkbox } from '@material-ui/core'
 import { MuiPickersUtilsProvider, KeyboardTimePicker, DatePicker} from '@material-ui/pickers'
-
+import {create} from './api-calendar.js'
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
 import 'date-fns'
@@ -68,12 +68,58 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function CalendarPage() {
+    const [values, setValues] = useState({
+        date: new Date(), //this is just a default value
+        time: ("2018-01-01T00:00:00.000Z"),
+        eventName: '',
+        description:'',
+        studytime: '',
+        location: '',
+        open: false,
+        remote: '',
+        error: '',
+       // redirectToProfile: false
+      })
+      //just the default value p sure
+     // const [date, changeDate] = useState(new Date());
 
-    const [date, changeDate] = useState(new Date());
-    const [selectedTime, handleTimeChange] = useState("2018-01-01T00:00:00.000Z");
+    const clickSubmit = () => {
+        const calendar = {
+            date: values.date || undefined,
+            time: values.time || undefined,
+            eventName: values.eventName || undefined,
+            description: values.description || undefined,
+            location: values.location || undefined,
+            remote: values.remote || undefined
+          }
+          
+          create(calendar).then((data) => {
+            console.log(data);
+            if (data.error) {
+              setValues({ ...values, error: data.error})
+            } else {
+              setValues({ ...values, error: '', open: true})
+            }
+          })
+        }
 
+ 
+    const handleChange = name => event => {
+        let value = '';
+        console.log(event);
+        if (name === 'date' || name === 'time') { 
+                value = event 
+            } 
+        else { 
+            value = event.target.value 
+        }
+        setValues({...values, [name]: value
+        });
+      
+    }
     
     const [show, setShow] = useState(true);
+
     const handleCheckbox = (event) => {
         if (event.target.checked == false)
             setShow(true);
@@ -81,9 +127,7 @@ export default function CalendarPage() {
             setShow(false);
     }
     
-    const handleSubmit = evt => {
-        
-    }
+  
 
 
     const classes = useStyles()
@@ -104,10 +148,8 @@ export default function CalendarPage() {
                                     orientation="landscape"
                                     variant="static"
                                     openTo="date"
-                                    value={date}
-                                    onChange={changeDate}/>   
-                                
-                                
+                                    value={values.date}
+                                    onChange={handleChange('date')}/>   
                             </MuiPickersUtilsProvider>
                         </Grid>
 
@@ -116,13 +158,13 @@ export default function CalendarPage() {
                                 <KeyboardTimePicker
                                     id="timePicker"
                                     label="Time"
-                                    value={selectedTime}
-                                    onChange={handleTimeChange}/> 
+                                    onChange={handleChange('time')}
+                                    value={values.time}/> 
                             </MuiPickersUtilsProvider>
                         </Grid>
 
                         <Grid item>
-                            <form onSubmit={handleSubmit} align="center">
+                            <form align="center">
                                 <Box
                                     justifyContent="center"
                                     justifyItems="center"
@@ -138,6 +180,8 @@ export default function CalendarPage() {
                                         <TextField
                                             id="EventName"
                                             className={classes.eventName}
+                                            onChange={handleChange('eventName')}
+                                            value={values.eventName}
                                             label="Event Name"
                                             placeholder="Name of Event"
                                             margin="dense"/>
@@ -145,6 +189,8 @@ export default function CalendarPage() {
                                         <TextField
                                             id="EventDesc"
                                             className={classes.desciption}
+                                            onChange={handleChange('description')}
+                                              value={values.description}
                                             label="Description"
                                             placeholder="Description of event"
                                             multiline
@@ -158,13 +204,16 @@ export default function CalendarPage() {
                                                     className={classes.location}
                                                     id="Location"
                                                     label="Location"
-                                                    variant="outlined" />}
+                                                    variant="outlined" 
+                                                    onChange={handleChange('location')}
+                                                    value={values.location}
+                                                    />}
                                                 
                                                 <FormControlLabel
                                                     className={classes.inLine}
                                                     value="Remote"
                                                     control={<Checkbox 
-                                                                onChange={handleCheckbox}/>}
+                                                                onChange={handleChange('remote')}/>}
                                                     label="Remote"
                                                     labelPlacement="end"/>  
                                         </div>          
@@ -176,7 +225,7 @@ export default function CalendarPage() {
                                         padding: "12px 18px",
                                         fontSize: "16px"
                                     }}
-                                    variant="contained" onSubmit={handleSubmit()}>Create Event!
+                                    variant="contained" onSubmit={clickSubmit()}>Create Event!
                                 </Button>
                             </form>
                         </Grid>
