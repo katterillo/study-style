@@ -18,10 +18,15 @@ const MainRouter = () => {
         <Route path="/userprofiles" component={Users}/>
         <Route path="/signup" component={Signup}/>
         <Route path="/signin" component={Signin}/>
+<<<<<<< HEAD
         <Route path="/user/:userId" component={Profile}/>
         <PrivateRoute path="/userprofile/edit/:userId" component={EditProfile}/>
         <Route path="/userprofile/:userId" component={Profile}/>
         <Route path="/calendar" component={CalendarPage}/>
+=======
+        <PrivateRoute path="/userprofile/edit/:userId" component={EditProfile}/>
+        <Route path="/userprofile/:userId" component={Profile}/>
+>>>>>>> 66243b19607a4c003b367b767901c3ee36a909d7
       </Switch>
     </div>)
 }
