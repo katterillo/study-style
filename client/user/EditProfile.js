@@ -48,7 +48,9 @@ export default function EditProfile({ match }) {
     name: '',
     password: '',
     email: '',
+    goal:'',
     studytime: '',
+    genre: '',
     open: false,
     error: '',
     redirectToProfile: false
@@ -65,7 +67,7 @@ export default function EditProfile({ match }) {
       if (data && data.error) {
         setValues({...values, error: data.error})
       } else {
-        setValues({...values, name: data.name, email: data.email, studytime: data.studytime})
+        setValues({...values, name: data.name, email: data.email, studytime: data.studytime, goal: data.goal, genre: data.genre})
       }
     })
     return function cleanup(){
@@ -79,7 +81,9 @@ export default function EditProfile({ match }) {
       name: values.name || undefined,
       email: values.email || undefined,
       password: values.password || undefined,
-      studytime: values.studytime || undefined
+      studytime: values.studytime || undefined,
+      goal: values.goal || undefined,
+      genre: values.genre || undefined
     }
     update({
       userId: match.params.userId
@@ -106,14 +110,14 @@ export default function EditProfile({ match }) {
       <Card className={classes.card}>
         <CardContent>
           <Typography variant="h6" className={classes.title}>
-            Edit Profile
+            Edit Study Profile
           </Typography>
           <TextField id="name" label="Name" className={classes.textField} value={values.name} onChange={handleChange('name')} margin="normal"/><br/>
           <TextField id="email" type="email" label="Email" className={classes.textField} value={values.email} onChange={handleChange('email')} margin="normal"/><br/>
           <TextField id="password" type="password" label="Password" className={classes.textField} value={values.password} onChange={handleChange('password')} margin="normal"/>
           <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Age</InputLabel>
+              <InputLabel id="demo-simple-select-label">When do you prefer to study?</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -121,10 +125,60 @@ export default function EditProfile({ match }) {
                 label="StudyTime"
                 onChange={handleChange('studytime')}
         >
+          <MenuItem value={"N/A"}>N/A</MenuItem>
           <MenuItem value={"Morning"}>Morning</MenuItem>
           <MenuItem value={"Afternoon"}>Afternoon</MenuItem>
           <MenuItem value={"Evening"}>Evening</MenuItem>
-          <MenuItem value={"N/A"}>Thirty</MenuItem>
+          <MenuItem value={"Night"}>Night</MenuItem>
+   
+        </Select>
+      </FormControl>
+      </Box>
+      <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">What is your main goal?</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={values.goal}
+                label="goal"
+                onChange={handleChange('goal')}
+        >
+          <MenuItem value={"N/A"}>N/A</MenuItem>
+          <MenuItem value={"Improve my grades"}>Improve my grades</MenuItem>
+          <MenuItem value={"Build good study habits"}>Build good study habits</MenuItem>
+          <MenuItem value={"Complete my homework"}>Complete my homework</MenuItem>
+          <MenuItem value={"Stay focused for longer periods"}>Stay focused for longer periods</MenuItem>
+          <MenuItem value={"Share resources"}>Share resources</MenuItem>
+          <MenuItem value={"Find similar users"}>Find similar users</MenuItem>
+          <MenuItem value={"Be more motivated to study"}>Be more motivated to study</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+    <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">What genre of music do you most like to listen to while studying?</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={values.genre}
+                label="genre"
+                onChange={handleChange('genre')}
+        >
+          <MenuItem value={"N/A"}>rock</MenuItem>
+          <MenuItem value={"country"}>country</MenuItem>
+          <MenuItem value={"pop"}>pop</MenuItem>
+          <MenuItem value={"rap"}>rap</MenuItem>
+          <MenuItem value={"classical"}>classical</MenuItem>
+          <MenuItem value={"hip hop"}>hip hop</MenuItem>
+          <MenuItem value={"metal"}>metal</MenuItem>
+          <MenuItem value={"rock"}>rock</MenuItem>
+          <MenuItem value={"edm"}>edm</MenuItem>
+          <MenuItem value={"punk"}>punk</MenuItem>
+          <MenuItem value={"dance"}>dance</MenuItem>
+          <MenuItem value={"alternative"}>alternative</MenuItem>
+          <MenuItem value={"lo-fi"}>lo-fi</MenuItem>
+
         </Select>
       </FormControl>
     </Box>
