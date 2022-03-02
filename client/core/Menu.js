@@ -38,6 +38,9 @@ const Menu = withRouter(({history}) => (
             <Button style={isActive(history, "/signin")}>Sign In
             </Button>
           </Link>
+          <Link to="/calendar">
+            <Button style={isActive(history, "/calendar")}>Calendar</Button>
+          </Link>
         </span>)
       }
       {
