@@ -1,5 +1,6 @@
-const create = (user) => {
-    return fetch('/api/users/', {
+const create = async (user) => {
+  try {
+      let response = await fetch('/api/users/', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -7,34 +8,44 @@ const create = (user) => {
         },
         body: JSON.stringify(user)
       })
-      .then((response) => {
-        return response.json()
-      }).catch((err) => console.log(err))
+    return await response.json()
+  } catch(err) {
+    console.log(err)
   }
+}
 
-  const list = () => {
-    return fetch('/api/users/', {
+const list = async (signal) => {
+  try {
+    let response = await fetch('/api/users/', {
       method: 'GET',
-    }).then(response => {
-      return response.json()
-    }).catch((err) => console.log(err))
+      signal: signal,
+    })
+    return await response.json()
+  } catch(err) {
+    console.log(err)
   }
+}
 
-  const read = (params, credentials) => {
-    return fetch('/api/users/' + params.userId, {
+const read = async (params, credentials, signal) => {
+  try {
+    let response = await fetch('/api/users/' + params.userId, {
       method: 'GET',
+      signal: signal,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + credentials.t
       }
-    }).then((response) => {
-      return response.json()
-    }).catch((err) => console.log(err))
+    })
+    return await response.json()
+  } catch(err) {
+    console.log(err)
   }
+}
 
-  const update = (params, credentials, user) => {
-    return fetch('/api/users/' + params.userId, {
+const update = async (params, credentials, user) => {
+  try {
+    let response = await fetch('/api/users/' + params.userId, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
@@ -42,26 +53,33 @@ const create = (user) => {
         'Authorization': 'Bearer ' + credentials.t
       },
       body: JSON.stringify(user)
-    }).then((response) => {
-      return response.json()
-    }).catch((err) => {
-      console.log(err)
     })
+    return await response.json()
+  } catch(err) {
+    console.log(err)
   }
+}
 
-  const remove = (params, credentials) => {
-    return fetch('/api/users/' + params.userId, {
+const remove = async (params, credentials) => {
+  try {
+    let response = await fetch('/api/users/' + params.userId, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + credentials.t
       }
-    }).then((response) => {
-      return response.json()
-    }).catch((err) => {
-      console.log(err)
-    }) 
+    })
+    return await response.json()
+  } catch(err) {
+    console.log(err)
   }
+}
 
-  export { create, list, read, update, remove }
+export {
+  create,
+  list,
+  read,
+  update,
+  remove
+}

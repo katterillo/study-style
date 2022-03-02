@@ -1,29 +1,18 @@
-import { signout } from './api-auth.js'
+import React, { Component } from 'react'
+import { Route, Redirect } from 'react-router-dom'
+import auth from './auth-helper'
 
-const auth = {
-  isAuthenticated() {
-    if (typeof window == "undefined")
-      return false
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route {...rest} render={props => (
+    auth.isAuthenticated() ? (
+      <Component {...props}/>
+    ) : (
+      <Redirect to={{
+        pathname: '/signin',
+        state: { from: props.location }
+      }}/>
+    )
+  )}/>
+)
 
-    if (sessionStorage.getItem('jwt'))
-      return JSON.parse(sessionStorage.getItem('jwt'))
-    else
-      return false
-  },
-  authenticate(jwt, cb) {
-    if (typeof window !== "undefined")
-      sessionStorage.setItem('jwt', JSON.stringify(jwt))
-    cb()
-  },
-  clearJWT(cb) {
-    if (typeof window !== "undefined")
-      sessionStorage.removeItem('jwt')
-    cb()
-    //optional
-    signout().then((data) => {
-      document.cookie = "t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
-    })
-  }
-}
-
-export default auth
+export default PrivateRoute
