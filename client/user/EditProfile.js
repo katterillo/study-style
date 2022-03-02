@@ -165,7 +165,7 @@ export default function EditProfile({ match }) {
                 label="genre"
                 onChange={handleChange('genre')}
         >
-          <MenuItem value={"N/A"}>rock</MenuItem>
+          <MenuItem value={"N/A"}>N/A</MenuItem>
           <MenuItem value={"country"}>country</MenuItem>
           <MenuItem value={"pop"}>pop</MenuItem>
           <MenuItem value={"rap"}>rap</MenuItem>
