@@ -9,6 +9,7 @@ import Template from './../template'
 import userRoutes from './routes/user.routes'
 import userprofileRoutes from './routes/userprofile.routes'
 import authRoutes from './routes/auth.routes'
+import calendarRoutes from './routes/calendar.routes'
 
 // modules for server side rendering
 import React from 'react'
@@ -45,6 +46,7 @@ app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR, 'dist')))
 app.use('/', userRoutes)
 app.use('/', userprofileRoutes)
 app.use('/', authRoutes)
+app.use('/',calendarRoutes)
 
 app.get('*', (req, res) => {
   const sheets = new ServerStyleSheets()
