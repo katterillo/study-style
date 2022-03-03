@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import List from '@material-ui/core/List'
@@ -13,6 +13,10 @@ import ArrowForward from '@material-ui/icons/ArrowForward'
 import Person from '@material-ui/icons/Person'
 import {Link} from 'react-router-dom'
 import {list} from './api-user.js'
+import ReactTable from 'react-table'
+import Table from "./Table";
+import axios from 'axios';
+import styled from 'styled-components'
 
 const useStyles = makeStyles(theme => ({
   root: theme.mixins.gutters({
@@ -25,53 +29,109 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+const Styles = styled.div`
+  padding: 1rem;
+
+  table {
+    border-spacing: 0;
+    border: 1px solid black;
+    margin: auto;
+
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
+
+      :last-child {
+        border-right: 0;
+      }
+    }
+  }
+`
+
 export default function Users() { 
   const classes = useStyles()
   const [users, setUsers] = useState([])
+  //for react table
+  const [data, setData] = useState([]);
+
 
   useEffect(() => {
-    const abortController = new AbortController()
-    const signal = abortController.signal
+    (async () => {
+      const result = await axios("http://localhost:3000/api/userprofiles");
+      setData(result.data);
+    })();
+  }, []);
 
-    list(signal).then((data) => {
-      if (data && data.error) {
-        console.log(data.error)
-      } else {
-        setUsers(data)
-      }
-    })
-
-    return function cleanup(){
-      abortController.abort()
-    }
-  }, [])
-
+  const columns = useMemo(
+    () => [
+      {
+       
+        Header: "Users",
+        // First group columns
+        columns: [
+          {
+            Header: "Name",
+            accessor: "name"
+          },
+          {
+            Header: "Email",
+            accessor: "email"
+          },
+          {
+            Header: "Goal",
+            accessor: "goal"
+          },
+          {
+            Header: "Preferred Music Genre",
+            accessor: "genre"
+          },
+          {
+            Header: "Study Time Preference",
+            accessor: "studytime"
+          },
+        ]
+      },
+      // {
+ 
+      //   Header: "Details",
+      //   // Second group columns
+      //   columns: [
+      //     {
+      //       Header: "Language",
+      //       accessor: "show.language"
+      //     },
+      //     {
+      //       Header: "Genre(s)",
+      //       accessor: "show.genres"
+      //     },
+      //     {
+      //       Header: "Runtime",
+      //       accessor: "show.runtime"
+      //     },
+      //     {
+      //       Header: "Status",
+      //       accessor: "show.status"
+      //     }
+      //   ]
+      // }
+    ],
+    []
+  );
 
     return (
-      <Paper className={classes.root} elevation={4}>
-        <Typography variant="h6" className={classes.title}>
-          All Users
-        </Typography>
-        <List dense>
-         {users.map((item, i) => {
-          return <Link to={"/userprofile/" + item._id} key={i}>
-                    <ListItem button>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <Person/>
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText primary={item.name}/>
-                      <ListItemSecondaryAction>
-                      <IconButton>
-                          <ArrowForward/>
-                      </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                 </Link>
-               })
-             }
-        </List>
-      </Paper>
+        <Styles>
+      <Table columns={columns} data={data} />
+      </Styles>
     )
 }
