@@ -4,6 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import HomeIcon from '@material-ui/icons/Home'
+import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button'
 import auth from './../auth/auth-helper'
 import {Link, withRouter} from 'react-router-dom'
@@ -18,7 +19,7 @@ const Menu = withRouter(({history}) => (
   <AppBar position="static">
     <Toolbar>
       <Typography variant="h6" color="inherit">
-        MERN Skeleton
+        StudyStyle
       </Typography>
       <Link to="/">
         <IconButton aria-label="Home" style={isActive(history, "/")}>
@@ -43,6 +44,11 @@ const Menu = withRouter(({history}) => (
           </Link>
           <Link to="/pomodoro">
             <Button style={isActive(history, "/pomodoro")}>Pomodoro</Button>
+          </Link>
+          <Link to="/search">
+            <IconButton aria-label="Search" style={isActive(history, "/search")}>
+              <SearchIcon/>
+            </IconButton>
           </Link>
         </span>)
       }

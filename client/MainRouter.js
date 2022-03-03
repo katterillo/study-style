@@ -10,6 +10,7 @@ import PrivateRoute from './auth/PrivateRoute'
 import Menu from './core/Menu'
 import CalendarPage from './Calendar/Calendar'
 import PomTimer from './Pomodoro/PomTimer'
+import Search from './user/Search'
 
 const MainRouter = () => {
     return (<div>
@@ -24,6 +25,7 @@ const MainRouter = () => {
         <Route path="/userprofile/:userId" component={Profile}/>
         <Route path="/calendar" component={CalendarPage}/>
         <Route path="/pomodoro" component={PomTimer}/>
+        <Route path="/search" component={Search}/>
       </Switch>
     </div>)
 }
