@@ -18,7 +18,7 @@ const Menu = withRouter(({history}) => (
   <AppBar position="static">
     <Toolbar>
       <Typography variant="h6" color="inherit">
-        StudyStyle
+        MERN Skeleton
       </Typography>
       <Link to="/">
         <IconButton aria-label="Home" style={isActive(history, "/")}>
@@ -40,9 +40,6 @@ const Menu = withRouter(({history}) => (
           </Link>
           <Link to="/calendar">
             <Button style={isActive(history, "/calendar")}>Calendar</Button>
-          </Link>
-          <Link to="/timer">
-            <Button style={isActive(history, "/timer")}>Pomodoro Timer</Button>
           </Link>
         </span>)
       }
