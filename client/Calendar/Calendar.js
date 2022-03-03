@@ -1,12 +1,10 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Box, TextField, Button, FormControlLabel, Checkbox } from '@material-ui/core'
 import { MuiPickersUtilsProvider, KeyboardTimePicker, DatePicker} from '@material-ui/pickers'
 import {create} from './api-calendar.js'
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
-import ArrowForward from '@material-ui/icons/ArrowForward'
 import 'date-fns'
 import DateFnsUtils from '@date-io/date-fns'
 import Dialog from '@material-ui/core/Dialog'
@@ -16,11 +14,40 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import {Link} from 'react-router-dom'
 import {list} from './api-calendar.js'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import ListItemText from '@material-ui/core/ListItemText'
+import Table from "./Table-Calendar";
+import axios from 'axios';
+import styled from 'styled-components'
+
+
+const Styles = styled.div`
+  padding: 1rem;
+
+  table {
+    border-spacing: 0;
+    border: 1px solid black;
+    margin: auto;
+
+    tr {
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+
+    th,
+    td {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid black;
+      border-right: 1px solid black;
+
+      :last-child {
+        border-right: 0;
+      }
+    }
+  }
+`
 
 
 const useStyles = makeStyles(theme => ({
@@ -81,9 +108,52 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function CalendarPage() {
+    //for react table
+    const [data, setData] = useState([]);
+  
+  
+    useEffect(() => {
+      (async () => {
+        const result = await axios("http://localhost:3000/api/calendars");
+        setData(result.data);
+      })();
+    }, []);
+  
+    const columns = useMemo(
+      () => [
+        {
+         
+          Header: "Events",
+          // First group columns
+          columns: [
+            {
+              Header: "Name",
+              accessor: "eventName"
+            },
+            {
+              Header: "Description",
+              accessor: "description"
+            },
+            {
+              Header: "Date",
+              accessor: "date"
+            },
+            {
+              Header: "Time",
+              accessor: "time"
+            },
+            {
+              Header: "Location",
+              accessor: "location"
+            },
+          ]
+        },
+      ],
+      []
+    );
+  
     const [calendars, setCalendars] = useState([])
 
- 
     useEffect(() => {
         const abortController = new AbortController()
         const signal = abortController.signal
@@ -292,20 +362,9 @@ export default function CalendarPage() {
                 <Typography variant="h6" className={classes.title} align="center">
                     Study Events
                 </Typography>
-                <List dense>
-         {calendars.map((item, i) => {
-           
-         return <ListItem key={i}>  
-          <ListItemText primary={item.eventName}/>
-         <ListItemText primary={item.date.substr(0,10)}/> 
-         <ListItemText primary={item.time.substr(12,15)}/>
-         <ListItemText primary={item.description}/>
-         <ListItemText primary={item.location}/>
-         {/* <ListItemText primary={item.remote}/> */}
-         </ListItem>
-               })
-             }
-             </List>
+                <Styles>
+      <Table columns={columns} data={data} />
+      </Styles>
                 </Card>
       
             </Grid>
