@@ -44,7 +44,7 @@ const list = (req, res) => {
       })
     }
     res.json(users)
-  }).select('name email updated created')
+  }).select('name email genre studytime goal updated created')
 }
 
 const update = (req, res, next) => {

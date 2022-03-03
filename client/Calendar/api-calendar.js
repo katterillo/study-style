@@ -1,6 +1,6 @@
 const create = async (user) => {
     try {
-        let response = await fetch('/api/calendar/', {
+        let response = await fetch('/api/calendars/', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -16,7 +16,7 @@ const create = async (user) => {
   
   const list = async (signal) => {
     try {
-      let response = await fetch('/api/calendar/', {
+      let response = await fetch('/api/calendars/', {
         method: 'GET',
         signal: signal,
       })
@@ -26,27 +26,26 @@ const create = async (user) => {
     }
   }
   
-  const read = async (params, credentials, signal) => {
-    try {
-      let response = await fetch('/api/calendar/' + params.userId, {
-        method: 'GET',
-        signal: signal,
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + credentials.t
-        }
-      })
-      return await response.json()
-    } catch(err) {
-      console.log(err)
-    }
-  }
+  // const read = async (params, credentials, signal) => {
+  //   try {
+  //     let response = await fetch('/api/calendars/' + params.userId, {
+  //       method: 'GET',
+  //       signal: signal,
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer ' + credentials.t
+  //       }
+  //     })
+  //     return await response.json()
+  //   } catch(err) {
+  //     console.log(err)
+  //   }
+  // }
   
   
   
   export {
     create,
     list,
-    read,
   }
