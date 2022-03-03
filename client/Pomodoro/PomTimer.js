@@ -1,156 +1,151 @@
-const timer = {
-  pomodoro: 25,
-  shortBreak: 5,
-  longBreak: 15,
-  longBreakInterval: 4,
-  sessions: 0,
-};
+import React, { useState, useEffect } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import { Grid, Box, TextField, Button, ButtonGroup, FormControlLabel, Checkbox } from '@material-ui/core'
+import Card from '@material-ui/core/Card'
+import Typography from '@material-ui/core/Typography'
 
-let interval;
-
-const buttonSound = new Audio('button-sound.mp3');
-const mainButton = document.getElementById('js-btn');
-mainButton.addEventListener('click', () => {
-  buttonSound.play();
-  const { action } = mainButton.dataset;
-  if (action === 'start') {
-    startTimer();
-  } else {
-    stopTimer();
-  }
-});
-
-const modeButtons = document.querySelector('#js-mode-buttons');
-modeButtons.addEventListener('click', handleMode);
-
-function getRemainingTime(endTime) {
-  const currentTime = Date.parse(new Date());
-  const difference = endTime - currentTime;
-
-  const total = Number.parseInt(difference / 1000, 10);
-  const minutes = Number.parseInt((total / 60) % 60, 10);
-  const seconds = Number.parseInt(total % 60, 10);
-
-  return {
-    total,
-    minutes,
-    seconds,
-  };
-}
-
-function startTimer() {
-  let { total } = timer.remainingTime;
-  const endTime = Date.parse(new Date()) + total * 1000;
-
-  if (timer.mode === 'pomodoro') timer.sessions++;
-
-  mainButton.dataset.action = 'stop';
-  mainButton.textContent = 'stop';
-  mainButton.classList.add('active');
-
-  interval = setInterval(function() {
-    timer.remainingTime = getRemainingTime(endTime);
-    updateClock();
-
-    total = timer.remainingTime.total;
-    if (total <= 0) {
-      clearInterval(interval);
-
-      switch (timer.mode) {
-        case 'pomodoro':
-          if (timer.sessions % timer.longBreakInterval === 0) {
-            switchMode('longBreak');
-          } else {
-            switchMode('shortBreak');
+ 
+const useStyles = makeStyles(theme => ({
+  card: {
+      width: 700,
+      margin: 'auto',
+      marginTop: theme.spacing(5),
+      marginBottom: theme.spacing(5),
+      height: 800,
+      transformOrigin: "center",
+            "&.Mui-focused": {
+              transformOrigin: "center"
+            },
+      padding: 20
+    },
+  sideCard: {
+      width: 400,
+      margin: 'auto',
+      marginTop: theme.spacing(5),
+      marginBottom: theme.spacing(5),
+      maxHeight: 800,
+      padding: 20,
+      overflow: true
+    },
+  title: {
+      padding:`${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
+      textAlign: "center",
+      color: theme.palette.openTitle
+  },
+  time: {
+    padding:`${theme.spacing(3)}px ${theme.spacing(2.5)}px ${theme.spacing(2)}px`,
+    textAlign: "center",
+    color: theme.palette.black 
+  },
+  desciption: {
+      width: "55ch",
+      "& label": {
+        width: "100%",
+        textAlign: "center",
+        transformOrigin: "center",
+          "&.Mui-focused": {
+            transformOrigin: "center"
           }
-          break;
-        default:
-          switchMode('pomodoro');
-      }
+       }
+    },
+  eventName: {
+      width: "45ch",
+      "& label": {
+        width: "100%",
+        textAlign: "center",
+        transformOrigin: "center",
+          "&.Mui-focused": {
+            transformOrigin: "center"
+          }
+       }
+    },
+  location: {
+      width: "35ch",
+      marginTop: 20,
+    },
+  scroll: {
+      overflow: "auto"
+  },
+  inLine: {
+      alignItems: "center",
+      margin: 10   
+  },
+}))
 
-      if (Notification.permission === 'granted') {
-        const text =
-          timer.mode === 'pomodoro' ? 'Get back to work!' : 'Take a break!';
-        new Notification(text);
-      }
+export default function PomTimer() {
 
-      document.querySelector(`[data-sound="${timer.mode}"]`).play();
+    const [minutes, setMinutes] = useState(25);
+    const [seconds, setSeconds] = useState(0);
+    const [displayMessage, setDisplayMessage] = useState(false);
 
-      startTimer();
-    }
-  }, 1000);
-}
-
-function stopTimer() {
-  clearInterval(interval);
-
-  mainButton.dataset.action = 'start';
-  mainButton.textContent = 'start';
-  mainButton.classList.remove('active');
-}
-
-function updateClock() {
-  const { remainingTime } = timer;
-  const minutes = `${remainingTime.minutes}`.padStart(2, '0');
-  const seconds = `${remainingTime.seconds}`.padStart(2, '0');
-
-  const min = document.getElementById('js-minutes');
-  const sec = document.getElementById('js-seconds');
-  min.textContent = minutes;
-  sec.textContent = seconds;
-
-  const text =
-    timer.mode === 'pomodoro' ? 'Get back to work!' : 'Take a break!';
-  document.title = `${minutes}:${seconds} — ${text}`;
-
-  const progress = document.getElementById('js-progress');
-  progress.value = timer[timer.mode] * 60 - timer.remainingTime.total;
-}
-
-function switchMode(mode) {
-  timer.mode = mode;
-  timer.remainingTime = {
-    total: timer[mode] * 60,
-    minutes: timer[mode],
-    seconds: 0,
-  };
-
-  document
-    .querySelectorAll('button[data-mode]')
-    .forEach(e => e.classList.remove('active'));
-  document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
-  document.body.style.backgroundColor = `var(--${mode})`;
-  document
-    .getElementById('js-progress')
-    .setAttribute('max', timer.remainingTime.total);
-
-  updateClock();
-}
-
-function handleMode(event) {
-  const { mode } = event.target.dataset;
-
-  if (!mode) return;
-
-  switchMode(mode);
-  stopTimer();
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  if ('Notification' in window) {
-    if (
-      Notification.permission !== 'granted' &&
-      Notification.permission !== 'denied'
-    ) {
-      Notification.requestPermission().then(function(permission) {
-        if (permission === 'granted') {
-          new Notification(
-            'Awesome! You will be notified at the start of each session'
-          );
+    useEffect(() => {
+      let interval = setInterval(() => {
+        clearInterval(interval)
+  
+        if (seconds === 0) {
+          if (minutes !== 0) {
+            setSeconds(59)
+            setMinutes(minutes - 1)
+          } else {
+            let minutes = displayMessage ? 24 : 4
+            let seconds = 59
+  
+            setSeconds(seconds)
+            setMinutes(minutes)
+            setDisplayMessage(!displayMessage)
+          }
+        } else {
+          setSeconds(seconds - 1)
         }
-      });
-    }
-  }
+      }, 1000)
+    }, [seconds])
 
-  switchMode('pomodoro');
-});
+    function setTime(time) {
+      setMinutes(time-1);
+      setSeconds(59);
+      clearInterval(interval)
+    }
+
+    const timerMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const timerSeconds = seconds < 10 ? `0${seconds}` : seconds;
+
+  const classes = useStyles()
+  return (
+    <Grid item>
+        <Card className={classes.sideCard} justifyContent="center" justify="center" align="center">
+          <Typography variant="h6" className={classes.title} align="center">
+              Pomodoro Timer
+          </Typography>
+          <Typography variant="h6" className={classes.time} align="center">
+            {timerMinutes}:{timerSeconds}
+          </Typography>
+          <ButtonGroup variant="outlined" aria-label="outlined button group" >
+          <Button variant="contained"
+            onClick={() => {
+              setTime(25);
+            }}
+          >
+            Work Time
+          </Button>
+          <Button variant="contained"
+            onClick={() => {
+              setTime(5);
+            }}
+          >
+            Short Break
+          </Button>
+          <Button variant="contained"
+            onClick={() => {
+              setTime(15);
+            }}
+          >
+            Long Break
+          </Button>
+          </ButtonGroup>
+          <Typography variant="h6" className={classes.title} align="center">
+              {displayMessage}
+          </Typography>
+        </Card>
+    </Grid>
+  );
+}
