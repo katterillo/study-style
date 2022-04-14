@@ -165,20 +165,30 @@ export default function EditProfile({ match }) {
                 label="genre"
                 onChange={handleChange('genre')}
         >
-          <MenuItem value={"N/A"}>N/A</MenuItem>
-          <MenuItem value={"country"}>country</MenuItem>
-          <MenuItem value={"pop"}>pop</MenuItem>
-          <MenuItem value={"rap"}>rap</MenuItem>
-          <MenuItem value={"classical"}>classical</MenuItem>
-          <MenuItem value={"hip hop"}>hip hop</MenuItem>
-          <MenuItem value={"metal"}>metal</MenuItem>
-          <MenuItem value={"rock"}>rock</MenuItem>
-          <MenuItem value={"edm"}>edm</MenuItem>
-          <MenuItem value={"punk"}>punk</MenuItem>
-          <MenuItem value={"dance"}>dance</MenuItem>
-          <MenuItem value={"alternative"}>alternative</MenuItem>
+         <MenuItem value={"N/A"}>N/A</MenuItem>
+          <MenuItem value={"orchestral"}>orchestral</MenuItem>
+          <MenuItem value={"symphony"}>symphony</MenuItem>
+          <MenuItem value={"choral"}>choral</MenuItem>
+          <MenuItem value={"opera"}>opera</MenuItem>
+          <MenuItem value={"happy hardcore"}>happy hardcore</MenuItem>
+          <MenuItem value={"house"}>house</MenuItem>
+          <MenuItem value={"dubstep"}>dubstep</MenuItem>
+          <MenuItem value={"drum and bass"}>drum and bass</MenuItem>
+          <MenuItem value={"hardstyle"}>hardstyle</MenuItem>
+          <MenuItem value={"speedcore"}>speedcore</MenuItem>
+          <MenuItem value={"bluegrass"}>bluegrass</MenuItem>
+          <MenuItem value={"country pop"}>country pop</MenuItem>
+          <MenuItem value={"bakersfield sound"}>bakersfield sound</MenuItem>
+          <MenuItem value={"baroque pop"}>baroque pop</MenuItem>
+          <MenuItem value={"pop rock"}>pop rock</MenuItem>
+          <MenuItem value={"electropop"}>electropop</MenuItem>
+          <MenuItem value={"emo pop"}>emo pop</MenuItem>
+          <MenuItem value={"indie pop"}>indie pop</MenuItem>
+          <MenuItem value={"jazz rap"}>jazz rap</MenuItem>
+          <MenuItem value={"trap"}>trap</MenuItem>
+          <MenuItem value={"country trap"}>country trap</MenuItem>
+          <MenuItem value={"old school"}>old school</MenuItem>
           <MenuItem value={"lo-fi"}>lo-fi</MenuItem>
-
         </Select>
       </FormControl>
     </Box>
