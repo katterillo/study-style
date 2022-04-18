@@ -10,6 +10,7 @@ export default ({markup, css}) => {
         <title>MERN Skeleton</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link href="https://cdn.jsdelivr.net/npm/react-big-calendar@0.19.0/lib/css/react-big-calendar.css" rel="stylesheet"/>
         <style>
             a{
               text-decoration: none;

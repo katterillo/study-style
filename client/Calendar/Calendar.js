@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useMemo} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Grid, Box, TextField, Button, FormControlLabel, Checkbox } from '@material-ui/core'
+import { Grid, Box, TextField, Button, FormControlLabel, Checkbox, Container } from '@material-ui/core'
 import { MuiPickersUtilsProvider, KeyboardTimePicker, DatePicker} from '@material-ui/pickers'
 import {create} from './api-calendar.js'
 import Card from '@material-ui/core/Card'
@@ -16,7 +16,8 @@ import {Link} from 'react-router-dom'
 import {list} from './api-calendar.js'
 import Table from "./Table-Calendar";
 import axios from 'axios';
-import styled from 'styled-components'
+import styled from 'styled-components' 
+import events from './events'; 
 
 
 const Styles = styled.div`
@@ -107,6 +108,8 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
+var currentEvents = [];
+var selectedDate;
 export default function CalendarPage() {
     //for react table
     const [data, setData] = useState([]);
@@ -170,6 +173,7 @@ export default function CalendarPage() {
           abortController.abort()
         }
       }, [])
+
     const [values, setValues] = useState({
         date: new Date(), //this is just a default value
         time: ("2018-01-01T00:00:00.000Z"),
@@ -196,6 +200,21 @@ export default function CalendarPage() {
             remote: values.remote || undefined
           }
           
+          events.push(
+            {
+              'title': calendar.eventName,
+              'start' : calendar.date,
+              'time' : calendar.time,
+              'location': calendar.location,
+              desc: calendar.description
+            }
+          )
+
+          for (let i = 0; i < events.length; i++) {
+            if (events[i].start.toDateString() === calendar.date.toDateString() && !currentEvents.includes(events[i]))
+              currentEvents.push(events[i]);
+          }
+
           create(calendar).then((data) => {
             console.log("inside clicksubmit, data: " + data);
             if (data.error) {
@@ -207,9 +226,22 @@ export default function CalendarPage() {
         }
 
  
+
     const handleChange = name => event => {
         let value = '';
-        console.log(event);
+
+        if (name === 'date') {
+          currentEvents = [];
+
+          for (let i = 0; i < events.length; i++) {
+            if (events[i].start.toDateString() === event.toDateString())
+              currentEvents.push(events[i]);
+              console.log(events[i].start)
+              console.log(event)
+          }
+          console.log(currentEvents)
+        }
+
         if (name === 'date' || name === 'time') { 
                 value = event 
             } 
@@ -235,11 +267,8 @@ export default function CalendarPage() {
         setValues({...values, [name]: event.target.value
       })
     }
+     
 
-  
-  
-    
-  
     const classes = useStyles()
     return (
         <Grid container justify="center" spacing={3}>
@@ -259,6 +288,7 @@ export default function CalendarPage() {
                                     variant="static"
                                     openTo="date"
                                     value={values.date}
+                                    selectedDate={values.date}
                                     onChange={handleChange('date')}/>   
                             </MuiPickersUtilsProvider>
                         </Grid>
@@ -359,12 +389,24 @@ export default function CalendarPage() {
       </Dialog>
             <Grid item>
                 <Card  justifyContent="center" justify="center">
-                <Typography variant="h6" className={classes.title} align="center">
-                    Study Events
+                <Typography variant="h5" className={classes.title} align="center">
+                    Study Events for the Day
                 </Typography>
-                <Styles>
-      <Table columns={columns} data={data} />
-      </Styles>
+                
+                <Grid justifyContent="center" justify="center" spacing={50}>
+                {currentEvents.map(function(currentEvents) {
+                  return (
+                    <Grid item>
+                    <Typography variant="h6" className={classes.title} align="center">
+                      {currentEvents.title}
+                      </Typography>
+                      <Typography variant="h7" className={classes.title} align="center">Location: {currentEvents.location}</Typography>
+                      <Typography variant="h7" className={classes.title} align="center">Description: {currentEvents.desc}</Typography>
+                    </Grid>
+                  )
+                })}
+                </Grid>
+      
                 </Card>
       
             </Grid>
